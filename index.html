@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>LoreScape - The Witcher 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Importation de Leaflet.js et son CSS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+        }
+        #map { 
+            height: 600px; 
+            width: 80%; 
+            margin: 20px auto; 
+            border: 2px solid black; 
+        }
+        #error-message { 
+            color: red; 
+            font-weight: bold; 
+            margin-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>LoreScape - The Witcher 3</h1>
+    <p>Déplacez-vous sur la carte et explorez les tuiles !</p>
+
+    <!-- Carte interactive -->
+    <div id="map"></div>
+
+    <!-- Message d'erreur en cas de problème -->
+    <div id="error-message"></div>
+
+    <script>
+        // Initialisation de la carte Leaflet
+        const map = L.map('map', {
+            crs: L.CRS.Simple, 
+            minZoom: 2, 
+            maxZoom: 5
+        });
+
+        // Définition des dimensions de l'image originale
+        const imgWidth = 4096; // Remplace par la largeur de ton image si différent
+        const imgHeight = 4096; // Remplace par la hauteur de ton image si différent
+        const bounds = [[0, 0], [imgHeight, imgWidth]];
+
+        // Vérifier si les tuiles existent
+        function checkTileExists(url, callback) {
+            fetch(url, { method: 'HEAD' })
+                .then(response => callback(response.ok))
+                .catch(() => callback(false));
+        }
+
+        // Charger les tuiles locales
+        const tileLayer = L.tileLayer('tiles/NovigradVelen/{z}_{x}_{y}.png', {
+            tileSize: 256,
+            maxZoom: 5,
+            minZoom: 2,
+            bounds: bounds,
+            attribution: "Map data © Novigrad & Velen"
+        });
+
+        // Vérifier si la première tuile existe avant d'ajouter la carte
+        checkTileExists('tiles/NovigradVelen/0_0.png', function(exists) {
+            if (exists) {
+                tileLayer.addTo(map);
+                map.fitBounds(bounds);
+            } else {
+                document.getElementById('error-message').innerText = "⚠ Erreur : Les tuiles ne sont pas trouvées. Vérifiez le dossier 'tiles/NovigradVelen/'.";
+            }
+        });
+    </script>
+</body>
+</html>
