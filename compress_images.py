@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 # 📂 Chemin du dossier contenant les tuiles
-tiles_folder = "D:/work/Projet Lore Scape/tiles"
+tiles_folder = "D:/work/Projet Lore Scape/tiles_old/NovigradVelen"
 
 # 📂 Dossier de sortie (compression sans perte)
 output_folder = "D:/work/Projet Lore Scape/tiles_compressed"
